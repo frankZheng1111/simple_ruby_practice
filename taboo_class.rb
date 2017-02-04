@@ -1,3 +1,4 @@
+require 'test/unit'
 # taboo words: class
 #
 # class MyClass < Array
@@ -14,4 +15,10 @@ end
 
 Object.const_set(:MyClass, c)
 
-p MyClass.new.my_method # => Hello!
+# Test
+#
+class TestMyclass < Test::Unit::TestCase
+  def test_my_method
+    assert_equal 'Hello!', MyClass.new.my_method
+  end
+end

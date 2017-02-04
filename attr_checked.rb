@@ -1,3 +1,5 @@
+require 'test/unit'
+
 module CheckedAttributes
   def self.included(base)
     base.extend AttrChecked
@@ -10,9 +12,9 @@ module CheckedAttributes
       end
 
       define_method "#{attr_name.to_s}=" do |arg, &rule|
-      raise 'need a block' unless block_given?
-      raise "#{attr_name.to_s} is invalid" unless yield(arg)
-      self.instance_variable_set("@_#{attr_name}", arg)
+        raise 'need a block' unless block_given?
+        raise "#{attr_name.to_s} is invalid" unless yield(arg)
+        self.instance_variable_set("@_#{attr_name}", arg)
       end
     end
   end
@@ -27,10 +29,21 @@ class Person
   end
 end
 
-person = Person.new
+class TestPerson < Test::Unit::TestCase
+  setup do
+    @person = Person.new
+  end
 
-person.age = 15
-p person.age
+  def test_valid_age
+    @person.age = 15
+    assert_equal 15, @person.age
+  end
 
-person.age = 1
-p person.age
+  def test_invalid_age
+    assert_raise do
+      @person.age = 1
+    end
+  end
+end
+
+
